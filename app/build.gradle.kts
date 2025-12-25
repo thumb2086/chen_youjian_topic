@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "com.example.chen_youjian_topic"
     compileSdk = 36
+    buildToolsVersion = "34.0.0"
 
     defaultConfig {
         applicationId = "com.example.chen_youjian_topic"

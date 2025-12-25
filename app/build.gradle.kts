@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.example.chen_youjian_topic"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.chen_youjian_topic"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

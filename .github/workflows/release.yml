@@ -35,13 +35,18 @@ jobs:
 
       - name: Sign APK
         id: sign_apk
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "${{ secrets.SIGNING_KEY }}" | base64 --decode > $HOME/signing.jks
+          UNSIGNED_APK=$(find app/build/outputs/apk/release -type f -name "*unsigned.apk" | head -n 1)
+          SIGNED_APK=${UNSIGNED_APK/-unsigned.apk/.apk}
+          $ANDROID_SDK_ROOT/build-tools/29.0.3/apksigner sign \
+            --ks $HOME/signing.jks \
+            --ks-key-alias "${{ secrets.ALIAS }}" \
+            --ks-pass "pass:${{ secrets.KEY_STORE_PASSWORD }}" \
+            --key-pass "pass:${{ secrets.KEY_PASSWORD }}" \
+            --out "$SIGNED_APK" \
+            "$UNSIGNED_APK"
+          echo "signedReleaseFile=$SIGNED_APK" >> $GITHUB_OUTPUT
 
       - name: Create Release
         id: create_release
